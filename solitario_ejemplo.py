@@ -82,3 +82,4 @@ class SolitarioEjemplo:
 
         if not origen.es_vacia() and origen.tope().boca_abajo:
             origen.tope().voltear()
+

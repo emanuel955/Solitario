@@ -27,27 +27,45 @@ class PilaCartas:
         el caso de los parámetros que sean None, los mismos no se
         considerarán como restricciones (por ejemplo, si valor_inicial == None
         se desactivará el chequeo de valor_inicial)."""
-        pass
+        self.pila=[]
+        self.pila_visible=pila_visible
+        self.valor_inicial=valor_inicial
+        self.puede_desapilar=puede_desapilar
+        self.criterio_apilar=criterio_apilar
+        self.criterio_mover=criterio_mover
 
     def es_vacia(self):
         """Indica si la pila se encuentra vacía."""
-        pass
+        return len(self.pila)==0
 
     def tope(self):
         """Devuelve la carta tope de la pila.
         Levanta SolitarioError en caso de error."""
-        pass
+        if self.es_vacia():
+            raise SolitarioError
+        return self.pila[-1]
 
     def apilar(self, carta, forzar=False):
         """Apila una carta en la pila. Si forzar es True desactiva los chequeos
         sobre el valor_inicial y el criterio_apilar.
         Levanta SolitarioError en caso de no poder apilar."""
-        pass
+        if forzar or not self.valor_inicial and not self.criterio_apilar:
+            self.pila.append(carta)
+        elif self.valor_inicial==carta.valor and self.es_vacia():
+            self.pila.append(carta)
+        elif not self.es_vacia() and self.criterio_apilar(self.tope(), carta):
+            self.pila.append(carta)
+        elif self.es_vacia() and not self.valor_inicial: #si no hay condicion de apilar inicial
+            self.pila.append(carta)
+        else:
+            raise SolitarioError('Movimiento invalido')
 
     def desapilar(self):
         """Desapila una carta. Levanta SolitarioError en caso de no poder
         desapilar."""
-        pass
+        if not self.puede_desapilar or self.es_vacia():
+            raise SolitarioError
+        return self.pila.pop()
 
     def mover(self, origen):
         """Siendo origen otra PilaCartas intenta mover un subpilón de cartas
@@ -60,7 +78,39 @@ class PilaCartas:
         cualquier valor.
         Debe levantarse SolitarioError en caso de no poder mover ninguna carta
         de origen a la pila."""
-        pass
+        aux=PilaCartas()
+        aux.apilar(origen.desapilar())
+        print(origen)
+        while self.criterio_mover(origen.tope(),aux.tope()) and not origen.tope().boca_abajo:
+            aux.apilar(origen.desapilar())
+        if self.criterio_apilar(self.tope(), aux.tope()) or self.tope().boca_abajo:
+            while not aux.es_vacia():
+                self.apilar(aux.desapilar())
+        else:
+            while not aux.es_vacia():
+                origen.apilar(aux.desapilar())
+            raise SolitarioError('Movimiento invalido')
+
+        '''while not origen.es_vacia():
+            print(origen.tope())
+            if self.criterio_mover(self.tope(),aux.tope()) and not origen.tope().boca_abajo:
+                aux.apilar(origen.desapilar())
+            else:
+                break
+
+        if aux.es_vacia():
+            raise SolitarioError('Movimiento invalido s')
+
+        while not aux.es_vacia():
+            print(self.tope(),aux.tope())
+            if self.criterio_apilar(self.tope(),aux.tope()) or self.tope().boca_abajo:
+                self.apilar(aux.desapilar())
+                print('s')
+            else:
+                origen.apilar(aux.desapilar())
+                print('x')'''
+
+
 
     def __str__(self):
         """Devuelve una representación de la pila.
@@ -68,9 +118,16 @@ class PilaCartas:
         Si pila_visible == True se representará a la pila como todas las
         cartas de base a tope separadas por espacios. Si no sólo se
         representará según el tope."""
-        pass
-
+        if self.es_vacia():
+            return 'X'
+        elif not self.pila_visible:
+            return str(self.tope())
+        else:
+            m=''
+            for carta in self.pila:
+                m+=str(carta)
+            return m
     def __repr__(self):
         """Ídem __str__."""
-        pass
+        str(self)
 

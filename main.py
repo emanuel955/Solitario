@@ -1,8 +1,13 @@
 from solitario_ejemplo import *
-
+from solitariocatorce import *
+from solitario_clasico import *
+from solitario_thumbandpouch import *
 SOLITARIOS = {
 	# "Nombre": (Clase, parámetros constructor),
-        "Ejemplo": (SolitarioEjemplo, None),
+        "Ejemplo": (SolitarioEjemplo, None), 
+        "Solitario Catorce": (SolitarioCatorce, None),
+        "Solitario Clásico": (SolitarioClasico, None),
+        "Solitario Thumb and Pouch": (SolitarioThumbAndPouch, None)
     }
 
 LOGFILE = 'solitario.log'
