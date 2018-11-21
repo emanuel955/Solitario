@@ -69,10 +69,10 @@ def criterio(palo=None, orden=None):
         if orden is not None:
             # Si hay restricción de valor:
             if orden == ASCENDENTE:
-                if a.valor != b.valor + 1:
+                if a.valor + 1 != b.valor:
                     return False
             elif orden == DESCENDENTE:
-                if a.valor + 1 != b.valor:
+                if a.valor!= b.valor + 1:
                     return False
             if orden == CONSECUTIVA:
                 if a.valor % 13 + 1 != b.valor and a.valor != b.valor % 13 + 1:

@@ -15,12 +15,12 @@ class SolitarioThumbAndPouch:
 
         for i in range(4):
             self.mesa.fundaciones.append(PilaCartas(valor_inicial=1, 
-                criterio_apilar=criterio(palo=MISMO_PALO,orden=DESCENDENTE)))
+                criterio_apilar=criterio(palo=MISMO_PALO,orden=ASCENDENTE)))
 
         for j in range(7):
             self.mesa.pilas_tablero.append(PilaCartas(pila_visible=True,
-                criterio_apilar=criterio(palo=DISTINTO_COLOR, orden=ASCENDENTE), 
-                criterio_mover=criterio(palo=DISTINTO_COLOR, orden=ASCENDENTE)))
+                criterio_apilar=criterio(palo=DISTINTO_COLOR, orden=DESCENDENTE), 
+                criterio_mover=criterio(palo=DISTINTO_COLOR, orden=DESCENDENTE)))
 
             for c in range(j+1):
                 self.mesa.pilas_tablero[j].apilar(self.mesa.mazo.desapilar(), forzar=True)
@@ -42,14 +42,16 @@ class SolitarioThumbAndPouch:
 
         contador=0
 
-        if self.mesa.mazo.es_vacia() and contador<2:
-            while not self.mesa.descarte.es_vacia():
-                carta=self.mesa.descarte.desapilar()
-                carta.voltear()
-                self.mesa.mazo.apilar(carta)
-            contador+=1
+            
 
         if len(jugada) == 1 and j0 == MAZO:
+            if self.mesa.mazo.es_vacia() and contador<2:
+                while not self.mesa.descarte.es_vacia():
+                    carta=self.mesa.descarte.desapilar()
+                    carta.voltear()
+                    self.mesa.mazo.apilar(carta)
+            contador+=1
+
             self.mesa.descarte.apilar(self.mesa.mazo.desapilar())
             self.mesa.descarte.tope().voltear()
 
@@ -86,7 +88,7 @@ class SolitarioThumbAndPouch:
         destino.apilar(origen.tope())
         origen.desapilar()
 
-        if origen in self.mesa.pilas_tablero and not  origen.es_vacia():
+        if origen in self.mesa.pilas_tablero and not  origen.es_vacia() and origen.tope().boca_abajo:
             origen.tope().voltear()
 
     def _subpila_a_pila(self, origen, destino):
