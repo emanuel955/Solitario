@@ -50,7 +50,7 @@ class SolitarioThumbAndPouch:
                     carta=self.mesa.descarte.desapilar()
                     carta.voltear()
                     self.mesa.mazo.apilar(carta)
-            contador+=1
+                contador+=1
 
             self.mesa.descarte.apilar(self.mesa.mazo.desapilar())
             self.mesa.descarte.tope().voltear()

@@ -37,55 +37,49 @@ class SolitarioClasico:
         j0, p0 = jugada[0]
         j1, p1 = jugada[1] if len(jugada) == 2 else (SALIR, 0)
 
-        if self.mesa.mazo.es_vacia():
-            while not self.mesa.descarte.es_vacia():
-                carta=self.mesa.descarte.desapilar()
-                carta.voltear()
-                self.mesa.mazo.apilar(carta)
 
         if len(jugada) == 1 and j0 == MAZO:
+            if self.mesa.mazo.es_vacia():
+                while not self.mesa.descarte.es_vacia():
+                    carta=self.mesa.descarte.desapilar()
+                    carta.voltear()
+                    self.mesa.mazo.apilar(carta)
             self.mesa.descarte.apilar(self.mesa.mazo.desapilar())
             self.mesa.descarte.tope().voltear()   
 
-        if len(jugada) == 1 and j0 in (PILA_TABLERO, DESCARTE):
+        elif len(jugada) == 1 and j0 in (PILA_TABLERO, DESCARTE):
             # Sólo especificaron una pila de origen, intentamos mover a alguna fundación.
             origen=self.mesa.descarte if j0 == DESCARTE else self.mesa.pilas_tablero[p0]
             for fundacion in self.mesa.fundaciones:
                 try:
                     self._carta_a_pila(origen, fundacion)
-                    if origen==self.mesa.pilas_tablero[p0]:
-                        self.mesa.pilas_tablero[p0].apilar(self.mesa.mazo.desapilar())
-                        self.mesa.pilas_tablero[p0].tope().voltear()
                     return
                 except SolitarioError:
                     pass
             raise SolitarioError("No puede moverse esa carta a la fundación")
 
-        if len(jugada)==2 and j0 in (PILA_TABLERO, DESCARTE, FUNDACION) and j1 in (PILA_TABLERO, FUNDACION):
+        elif len(jugada)==2 and j0 in (PILA_TABLERO, DESCARTE, FUNDACION) and j1 in (PILA_TABLERO, FUNDACION):
             destino = self.mesa.pilas_tablero[p1] if j1==PILA_TABLERO else self.mesa.fundaciones[p1]
             origen = self.mesa.pilas_tablero[p0] if j0 == PILA_TABLERO else self.mesa.fundaciones[p0] if j0 == FUNDACION else self.mesa.descarte
             if origen == self.mesa.fundaciones[p0] and origen == self.mesa.fundaciones[p1]:
                 raise SolitarioError('No se puede mover de una fundacion a otra.')       
             elif origen in self.mesa.pilas_tablero and destino in self.mesa.pilas_tablero:
                 self._subpila_a_pila(origen,destino)
-                self.mesa.pilas_tablero[p0].apilar(self.mesa.mazo.desapilar())
-                self.mesa.pilas_tablero[p0].tope().voltear()
             else:
                 self._carta_a_pila(origen, destino)
 
                 
 
 
-    def _carta_a_pila(self, origen, pila):
-        """Mueve la carta del tope entre dos pilas, si se puede, levanta SolitarioError si no."""
+    def _carta_a_pila(self, origen, destino):
+        """Mueve la carta del tope entre un origen y un destino, si se puede, levanta SolitarioError si no."""
         if origen.es_vacia():
             raise SolitarioError("La pila está vacía")
 
-        # Dejamos que PilaCarta haga las validaciones :)
-        pila.apilar(origen.tope())
+        destino.apilar(origen.tope())
         origen.desapilar()
 
-        if not origen.es_vacia() and origen.tope().boca_abajo:
+        if origen in self.mesa.pilas_tablero and not origen.es_vacia() and origen.tope().boca_abajo:
             origen.tope().voltear()
 
     def _subpila_a_pila(self, origen, destino):

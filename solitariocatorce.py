@@ -36,7 +36,7 @@ class SolitarioCatorce:
         j1, p1 = jugada[1] if len(jugada) == 2 else (SALIR, 0)
         pila_a=self.mesa.pilas_tablero[p0]
         pila_b=self.mesa.pilas_tablero[p1]
-        if  pila_a.tope().valor+pila_b.tope().valor==14:
+        if  not pila_a.es_vacia() and not pila_b.es_vacia() and pila_a.tope().valor+pila_b.tope().valor==14:
             pila_a.desapilar()
             pila_b.desapilar()
         else:

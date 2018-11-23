@@ -50,13 +50,13 @@ class PilaCartas:
         sobre el valor_inicial y el criterio_apilar.
         Levanta SolitarioError en caso de no poder apilar."""
         if forzar or not self.valor_inicial and not self.criterio_apilar:
-            return self.pila.append(carta)
+            self.pila.append(carta)
         elif self.valor_inicial==carta.valor and self.es_vacia():
-            return self.pila.append(carta)
+            self.pila.append(carta)
         elif not self.es_vacia() and self.criterio_apilar(self.tope(), carta):
-            return self.pila.append(carta)
+            self.pila.append(carta)
         elif self.es_vacia() and not self.valor_inicial: #si no hay condicion de apilar inicial
-            return self.pila.append(carta)
+            self.pila.append(carta)
         else:
             raise SolitarioError('Movimiento invalido')
 
@@ -79,23 +79,19 @@ class PilaCartas:
         Debe levantarse SolitarioError en caso de no poder mover ninguna carta
         de origen a la pila."""
         aux=PilaCartas()
+        if origen.es_vacia():
+            raise SolitarioError('Pila vacia')
         aux.apilar(origen.desapilar())
-        while not origen.es_vacia():
-            if self.criterio_mover(origen.tope(),aux.tope()) and not origen.tope().boca_abajo:
-                aux.apilar(origen.desapilar())
-            else:
-                break
-
-        if aux.es_vacia():#NO SIRVE PARA NADA
-            raise SolitarioError('Movimiento invalido','a')
-
-        while not aux.es_vacia():
-            if self.es_vacia():
+        while not origen.es_vacia() and self.criterio_mover(origen.tope(),aux.tope()) and not origen.tope().boca_abajo:
+            aux.apilar(origen.desapilar())
+        if self.es_vacia() or self.criterio_apilar(self.tope(), aux.tope()) or self.tope().boca_abajo:
+            while not aux.es_vacia():
                 self.apilar(aux.desapilar())
-            if self.criterio_apilar(self.tope(),aux.tope()) or self.tope().boca_abajo:
-                self.apilar(aux.desapilar())
-            else:
-                origen.apilar(aux.desapilar(),forzar = True)
+            return
+        else:
+            while not aux.es_vacia():
+                origen.apilar(aux.desapilar(), forzar=True)
+            raise SolitarioError('Movimiento invalido')
 
 
 
