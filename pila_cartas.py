@@ -36,7 +36,7 @@ class PilaCartas:
 
     def es_vacia(self):
         """Indica si la pila se encuentra vacía."""
-        return len(self.pila)==0
+        return not self.pila
 
     def tope(self):
         """Devuelve la carta tope de la pila.
@@ -95,7 +95,7 @@ class PilaCartas:
 
 
 
-    def __str__(self):
+    def __str__(self): 
         """Devuelve una representación de la pila.
         La misma será una X si la pila estuviera vacía.
         Si pila_visible == True se representará a la pila como todas las
@@ -106,10 +106,11 @@ class PilaCartas:
         elif not self.pila_visible:
             return str(self.tope())
         else:
-            m=''
+            cartas=''
             for carta in self.pila:
-                m+=str(carta)
-            return m
+                cartas+=str(carta)
+            return cartas
+
     def __repr__(self):
         """Ídem __str__."""
         str(self)

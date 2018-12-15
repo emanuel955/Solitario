@@ -14,12 +14,12 @@ class SolitarioCatorce:
 
         for i in range (12):
             self.mesa.pilas_tablero.append(PilaCartas(pila_visible=True))
-        i=0
+        numero_pila=0
         while not self.mesa.mazo.es_vacia():
             carta=self.mesa.mazo.desapilar()
             carta.voltear()
-            self.mesa.pilas_tablero[i%12].apilar(carta)
-            i+=1
+            self.mesa.pilas_tablero[numero_pila%12].apilar(carta)
+            numero_pila+=1
 
     def termino(self):
         """Avisa si el juego se terminó."""
@@ -36,8 +36,11 @@ class SolitarioCatorce:
         j1, p1 = jugada[1] if len(jugada) == 2 else (SALIR, 0)
         pila_a=self.mesa.pilas_tablero[p0]
         pila_b=self.mesa.pilas_tablero[p1]
-        if  not pila_a.es_vacia() and not pila_b.es_vacia() and pila_a.tope().valor+pila_b.tope().valor==14:
+        if  not pila_a.es_vacia() and not pila_b.es_vacia() and pila_a.tope().valor+pila_b.tope().valor==14: 
             pila_a.desapilar()
             pila_b.desapilar()
         else:
             raise SolitarioError('Movimiento invalido')
+
+
+

@@ -10,24 +10,22 @@ def crear_mazo(mazos=1, palos=4):
     para ese palo."""
     mazos_tot=PilaCartas()
     for cant in range(mazos):
-    	if palos==3:
-    		raise SolitarioError
-    	elif palos==1:
-    		palo=random.choice([0,1,2,3])
-    		for cant in range(4):
-    			mazo_individual(mazos_tot,palo)
-    	elif palos==2:
-    		while True:
-    			palo1=random.choice[0,1,2,3]
-    			palo2=random.choice[0,1,2,3]
-    			if palo1!=palo2 and cond(palo1,palo2):
-    				break
-    		for palo in range(2):
-    			mazo_individual(mazos_tot,palo1)
-    			mazo_individual(mazos_tot, palo2)
-    	else:
-    		for palo in range(4):
-    			mazo_individual(mazos_tot, palo)
+        if palos==1:
+            palo=random.choice([0,1,2,3])
+            for cant in range(4):
+                mazo_individual(mazos_tot,palo)
+        elif palos==2:
+            while True:
+                palo1=random.choice[0,1,2,3]
+                palo2=random.choice[0,1,2,3]
+                if palo1!=palo2 and cond_mismo_color(palo1,palo2):
+                    break
+            for palo in range(palos):
+                mazo_individual(mazos_tot,palo1)
+                mazo_individual(mazos_tot, palo2)
+        else:
+            for palo in range(palos):
+                mazo_individual(mazos_tot, palo)
     random.shuffle(mazos_tot.pila)
     return mazos_tot
 
@@ -37,7 +35,7 @@ def mazo_individual(mazos, palo):
     for valor in range(1,14):
         mazos.apilar(Carta(valor, palo))
 
-def cond(palo1, palo2):
+def cond_mismo_color(palo1, palo2):
     '''Verifica que los palos que se ingresen por parametro sean del mismo color.
     Devuelve un valor booleano.'''
     if palo1==0 and palo2==3 or palo1==3 and palo2==0:
